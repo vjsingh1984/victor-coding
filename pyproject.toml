@@ -1,5 +1,8 @@
 [build-system]
-requires = ["setuptools>=61.0", "wheel"]
+requires = [
+    "setuptools>=61.0",
+    "wheel",
+]
 build-backend = "setuptools.build_meta"
 
 [project]
@@ -8,25 +11,30 @@ version = "0.5.6"
 description = "Coding vertical for Victor AI - Software development, debugging, and code generation"
 readme = "README.md"
 requires-python = ">=3.10"
-license = {text = "Apache-2.0"}
+license = "Apache-2.0"
 authors = [
-    {name = "Vijaykumar Singh", email = "singhvjd@gmail.com"},
+    { name = "Vijaykumar Singh", email = "singhvjd@gmail.com" },
 ]
 maintainers = [
-    {name = "Vijaykumar Singh", email = "singhvjd@gmail.com"},
+    { name = "Vijaykumar Singh", email = "singhvjd@gmail.com" },
 ]
-keywords = ["victor", "vertical", "coding", "development", "debugging", "refactoring"]
+keywords = [
+    "victor",
+    "vertical",
+    "coding",
+    "development",
+    "debugging",
+    "refactoring",
+]
 classifiers = [
     "Development Status :: 4 - Beta",
     "Intended Audience :: Developers",
-    "License :: OSI Approved :: Apache Software License",
     "Programming Language :: Python :: 3",
     "Programming Language :: Python :: 3.10",
     "Programming Language :: Python :: 3.11",
     "Programming Language :: Python :: 3.12",
     "Topic :: Software Development",
 ]
-
 dependencies = [
     "victor-ai>=0.5.6",
 ]
@@ -51,15 +59,27 @@ Issues = "https://github.com/vjsingh1984/victor-coding/issues"
 coding = "victor_coding.assistant:CodingAssistant"
 
 [tool.setuptools]
-packages = ["victor_coding"]
+packages = [
+    "victor_coding",
+]
 
 [tool.black]
 line-length = 100
-target-version = ["py310", "py311", "py312"]
+target-version = [
+    "py310",
+    "py311",
+    "py312",
+]
 
 [tool.ruff]
 line-length = 100
-select = ["E", "W", "F", "B", "C4"]
+select = [
+    "E",
+    "W",
+    "F",
+    "B",
+    "C4",
+]
 
 [tool.mypy]
 python_version = "3.10"
