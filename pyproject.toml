@@ -61,6 +61,19 @@ coding = "victor_coding.assistant:CodingAssistant"
 [tool.setuptools]
 packages = [
     "victor_coding",
+    "victor_coding.codebase",
+    "victor_coding.completion",
+    "victor_coding.coverage",
+    "victor_coding.docgen",
+    "victor_coding.editing",
+    "victor_coding.languages",
+    "victor_coding.lsp",
+    "victor_coding.refactor",
+    "victor_coding.review",
+    "victor_coding.rl",
+    "victor_coding.teams",
+    "victor_coding.testgen",
+    "victor_coding.workflows",
 ]
 
 [tool.black]
