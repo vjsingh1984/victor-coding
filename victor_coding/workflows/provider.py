@@ -152,7 +152,7 @@ class CodingWorkflowProvider(BaseYAMLWorkflowProvider):
         Returns:
             Module path string for CONDITIONS and TRANSFORMS dictionaries
         """
-        return "victor.coding.escape_hatches"
+        return "victor_coding.escape_hatches"
 
 
 __all__ = [
