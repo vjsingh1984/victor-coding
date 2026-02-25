@@ -26,14 +26,16 @@ enabling the framework to remain domain-agnostic while providing rich
 coding assistant functionality.
 
 Package Structure:
-    assistant.py        - CodingAssistant vertical class
-    middleware.py       - Code correction middleware
-    safety.py           - Coding-specific safety patterns
-    prompts.py          - Task type hints and prompt contributions
-    mode_config.py      - Mode configurations and tool budgets
-    tool_dependencies.py - Code tool dependency graph
-    service_provider.py - DI service registration
-    workflows/          - Coding-specific workflows
+    assistant.py              - CodingAssistant vertical class
+    middleware.py             - Code correction middleware
+    safety.py                  - Coding-specific safety patterns (legacy)
+    safety_enhanced.py        - Enhanced safety with SafetyCoordinator
+    conversation_enhanced.py  - Enhanced conversation with ConversationCoordinator
+    prompts.py                - Task type hints and prompt contributions
+    mode_config.py            - Mode configurations and tool budgets
+    tool_dependencies.py      - Code tool dependency graph
+    service_provider.py       - DI service registration
+    workflows/                - Coding-specific workflows
 
 Usage:
     from victor.coding import CodingAssistant
@@ -43,6 +45,12 @@ Usage:
 
     # Get extensions for framework integration
     extensions = CodingAssistant.get_extensions()
+
+    # Use enhanced features
+    from victor.coding import EnhancedCodingSafetyExtension, EnhancedCodingConversationManager
+
+    safety_ext = EnhancedCodingSafetyExtension()
+    conv_mgr = EnhancedCodingConversationManager()
 """
 
 from victor_coding.assistant import CodingAssistant
@@ -51,6 +59,14 @@ from victor_coding.middleware import (
     CodeCorrectionMiddleware,
 )
 from victor_coding.safety import CodingSafetyExtension
+from victor_coding.safety_enhanced import (
+    CodingSafetyRules,
+    EnhancedCodingSafetyExtension,
+)
+from victor_coding.conversation_enhanced import (
+    CodingContext,
+    EnhancedCodingConversationManager,
+)
 from victor_coding.prompts import CodingPromptContributor
 from victor_coding.mode_config import CodingModeConfigProvider
 from victor_coding.service_provider import CodingServiceProvider
@@ -73,6 +89,12 @@ __all__ = [
     "CodingMiddleware",
     "CodeCorrectionMiddleware",
     "CodingSafetyExtension",
+    # Enhanced Extensions (with new coordinators)
+    "EnhancedCodingSafetyExtension",
+    "EnhancedCodingConversationManager",
+    "CodingSafetyRules",
+    "CodingContext",
+    # Other extensions
     "CodingPromptContributor",
     "CodingModeConfigProvider",
     "CodingToolDependencyProvider",  # Now uses canonical provider
