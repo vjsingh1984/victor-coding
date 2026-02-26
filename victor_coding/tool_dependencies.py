@@ -272,6 +272,7 @@ def __getattr__(name: str):
 
 __all__ = [
     "CodingToolDependencyProvider",
+    "get_provider",
     # Deprecated constants (for backward compatibility, accessed via __getattr__)
     "CODING_TOOL_DEPENDENCIES",  # noqa: F822
     "CODING_TOOL_SEQUENCES",  # noqa: F822
@@ -280,3 +281,34 @@ __all__ = [
     "CODING_REQUIRED_TOOLS",  # noqa: F822
     "CODING_OPTIONAL_TOOLS",  # noqa: F822
 ]
+
+
+# =============================================================================
+# Entry Point Provider Factory
+# =============================================================================
+
+
+def get_provider() -> YAMLToolDependencyProvider:
+    """Entry point provider factory for coding vertical.
+
+    This function is registered as an entry point in pyproject.toml:
+        [project.entry-points."victor.tool_dependencies"]
+        coding = "victor_coding.tool_dependencies:get_provider"
+
+    Returns:
+        A configured tool dependency provider for the coding vertical.
+
+    Example:
+        # Framework usage via entry points:
+        from importlib.metadata import entry_points
+        eps = entry_points(group="victor.tool_dependencies")
+        for ep in eps:
+            if ep.name == "coding":
+                provider_factory = ep.load()
+                provider = provider_factory()
+                deps = provider.get_dependencies()
+    """
+    return YAMLToolDependencyProvider(
+        yaml_path=_YAML_CONFIG_PATH,
+        canonicalize=True,
+    )

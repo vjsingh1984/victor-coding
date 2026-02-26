@@ -58,6 +58,12 @@ Issues = "https://github.com/vjsingh1984/victor-coding/issues"
 [project.entry-points."victor.verticals"]
 coding = "victor_coding.assistant:CodingAssistant"
 
+[project.entry-points."victor.tool_dependencies"]
+coding = "victor_coding.tool_dependencies:get_provider"
+
+[project.entry-points."victor.safety_rules"]
+coding = "victor_coding.safety:create_all_coding_safety_rules"
+
 [tool.setuptools]
 packages = [
     "victor_coding",
