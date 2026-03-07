@@ -67,6 +67,9 @@ coding = "victor_coding.safety:create_all_coding_safety_rules"
 [project.entry-points."victor.api_routers"]
 coding = "victor_coding.api.router_provider:get_fastapi_router_provider"
 
+[project.entry-points."victor.framework.teams.providers"]
+coding = "victor_coding.teams:CodingTeamSpecProvider"
+
 [tool.setuptools]
 packages = [
     "victor_coding",
