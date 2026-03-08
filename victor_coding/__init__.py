@@ -38,7 +38,7 @@ Package Structure:
     workflows/                - Coding-specific workflows
 
 Usage:
-    from victor.coding import CodingAssistant
+    from victor_coding import CodingAssistant
 
     # Get vertical configuration
     config = CodingAssistant.get_config()
@@ -47,7 +47,7 @@ Usage:
     extensions = CodingAssistant.get_extensions()
 
     # Use enhanced features
-    from victor.coding import EnhancedCodingSafetyExtension, EnhancedCodingConversationManager
+    from victor_coding import EnhancedCodingSafetyExtension, EnhancedCodingConversationManager
 
     safety_ext = EnhancedCodingSafetyExtension()
     conv_mgr = EnhancedCodingConversationManager()

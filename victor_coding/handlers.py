@@ -19,7 +19,7 @@ Domain-specific handlers for coding workflows:
 - test_runner: Test execution and reporting
 
 Usage:
-    from victor.coding import handlers
+    from victor_coding import handlers
     handlers.register_handlers()
 
     # In YAML workflow:

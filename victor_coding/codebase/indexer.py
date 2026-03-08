@@ -1035,7 +1035,7 @@ class IndexedSymbol(BaseModel):
     Renamed from Symbol to be semantically distinct:
     - IndexedSymbol (here): Pydantic model for index storage
     - NativeSymbol (victor.native.protocols): Rust-extracted symbols (frozen)
-    - RefactorSymbol (victor.coding.refactor.protocol): Refactoring symbol
+    - RefactorSymbol (victor_coding.refactor.protocol): Refactoring symbol
 
     Note: Body content is NOT stored here - read from file via line_number/end_line.
     This keeps the index lightweight while allowing full body retrieval on demand.

@@ -117,7 +117,7 @@ class RefactorSymbol:
     Renamed from Symbol to be semantically distinct:
     - RefactorSymbol (here): Refactoring symbol with SourceLocation and references
     - NativeSymbol (victor.native.protocols): Rust-extracted symbols (frozen)
-    - IndexedSymbol (victor.coding.codebase.indexer): Pydantic model for index storage
+    - IndexedSymbol (victor_coding.codebase.indexer): Pydantic model for index storage
     """
 
     name: str

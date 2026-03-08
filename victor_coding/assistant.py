@@ -69,7 +69,7 @@ class CodingAssistant(VerticalBase):
     - Tool dependency graph for intelligent selection
 
     Example:
-        from victor.coding import CodingAssistant
+        from victor_coding import CodingAssistant
 
         # Get vertical configuration
         config = CodingAssistant.get_config()
@@ -336,7 +336,7 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
         Returns:
             Service provider for DI registration
         """
-        return cls._get_extension_factory("service_provider", "victor.coding.service_provider")
+        return cls._get_extension_factory("service_provider", "victor_coding.service_provider")
 
     @classmethod
     def get_composed_chains(cls) -> Dict[str, Any]:
