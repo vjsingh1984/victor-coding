@@ -70,6 +70,21 @@ coding = "victor_coding.api.router_provider:get_fastapi_router_provider"
 [project.entry-points."victor.framework.teams.providers"]
 coding = "victor_coding.teams:CodingTeamSpecProvider"
 
+# NEW: Victor SDK Protocol implementations
+[project.entry-points."victor.sdk.protocols"]
+coding-tools = "victor_coding.protocols:CodingToolProvider"
+coding-safety = "victor_coding.protocols:CodingSafetyProvider"
+coding-prompts = "victor_coding.protocols:CodingPromptProvider"
+coding-workflows = "victor_coding.protocols:CodingWorkflowProvider"
+
+# NEW: Victor SDK Capability providers
+[project.entry-points."victor.sdk.capabilities"]
+coding-lsp = "victor_coding.protocols:LSPCapabilityProvider"
+coding-git = "victor_coding.protocols:GitCapabilityProvider"
+coding-style = "victor_coding.protocols:CodeStyleCapabilityProvider"
+coding-test = "victor_coding.protocols:TestingCapabilityProvider"
+coding-refactor = "victor_coding.protocols:RefactoringCapabilityProvider"
+
 [tool.setuptools]
 packages = [
     "victor_coding",
