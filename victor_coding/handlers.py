@@ -41,8 +41,8 @@ from typing import TYPE_CHECKING, Any, Dict, List
 
 if TYPE_CHECKING:
     from victor.tools.registry import ToolRegistry
-    from victor.workflows.definition import ComputeNode
-    from victor.workflows.executor import NodeResult, ExecutorNodeStatus, WorkflowContext
+    from victor.framework.extensions import ComputeNode
+    from victor.framework.extensions import NodeResult, ExecutorNodeStatus, WorkflowContext
 
 logger = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class CodeValidationHandler:
         context: "WorkflowContext",
         tool_registry: "ToolRegistry",
     ) -> "NodeResult":
-        from victor.workflows.executor import NodeResult, ExecutorNodeStatus
+        from victor.framework.extensions import NodeResult, ExecutorNodeStatus
 
         start_time = time.time()
         tool_calls = 0
@@ -153,7 +153,7 @@ class TestRunnerHandler:
         context: "WorkflowContext",
         tool_registry: "ToolRegistry",
     ) -> "NodeResult":
-        from victor.workflows.executor import NodeResult, ExecutorNodeStatus
+        from victor.framework.extensions import NodeResult, ExecutorNodeStatus
 
         start_time = time.time()
 
@@ -208,7 +208,7 @@ HANDLERS = {
 
 def register_handlers() -> None:
     """Register Coding handlers with the workflow executor."""
-    from victor.workflows.executor import register_compute_handler
+    from victor.framework.extensions import register_compute_handler
 
     for name, handler in HANDLERS.items():
         register_compute_handler(name, handler)

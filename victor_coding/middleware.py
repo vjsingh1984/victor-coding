@@ -177,7 +177,7 @@ class CodeCorrectionMiddleware(MiddlewareProtocol):
         """Lazy-load the inner middleware."""
         if self._inner_middleware is None:
             try:
-                from victor.agent.code_correction_middleware import (
+                from victor.framework.extensions import (
                     CodeCorrectionMiddleware as InnerMiddleware,
                     CodeCorrectionConfig,
                 )
@@ -236,8 +236,8 @@ class CodeCorrectionMiddleware(MiddlewareProtocol):
         inner = self._get_inner()
         if inner is None:
             # Return a minimal "no issues" result
-            from victor.agent.code_correction_middleware import CorrectionResult
-            from victor.evaluation.correction import CodeValidationResult, Language
+            from victor.framework.extensions import CorrectionResult
+            from victor.framework.extensions import CodeValidationResult, Language
 
             return CorrectionResult(
                 original_code="",

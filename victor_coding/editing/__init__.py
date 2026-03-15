@@ -12,7 +12,7 @@ For new code, prefer importing directly from victor.processing.editing:
 """
 
 # Re-export from victor-core
-from victor.processing.editing import (
+from victor.framework.processing import (
     OperationType,
     EditOperation,
     EditTransaction,

@@ -914,7 +914,7 @@ class TierAwareChunker:
         sliding window chunking.
         """
         if self._text_chunker is None:
-            from victor.processing.native import get_default_text_chunker
+            from victor.framework.processing import get_default_text_chunker
 
             self._text_chunker = get_default_text_chunker()
         return self._text_chunker

@@ -17,7 +17,7 @@
 import pytest
 
 from victor_coding.workflows import CodingWorkflowProvider
-from victor.workflows.definition import (
+from victor.framework.extensions import (
     AgentNode,
     ConditionNode,
     ParallelNode,

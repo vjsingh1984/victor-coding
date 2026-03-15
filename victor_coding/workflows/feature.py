@@ -20,7 +20,7 @@ research, planning, implementation, and review stages.
 
 from typing import Any, Dict
 
-from victor.workflows.definition import (
+from victor.framework.extensions import (
     WorkflowBuilder,
     WorkflowDefinition,
     workflow,

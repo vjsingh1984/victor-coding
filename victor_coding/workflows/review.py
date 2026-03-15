@@ -20,7 +20,7 @@ for security, style, and logic correctness.
 
 from typing import Any, Dict
 
-from victor.workflows.definition import (
+from victor.framework.extensions import (
     WorkflowBuilder,
     WorkflowDefinition,
     workflow,

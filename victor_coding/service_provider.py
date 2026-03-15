@@ -26,7 +26,7 @@ from typing import TYPE_CHECKING, List, Type
 from victor.core.verticals.protocols import ServiceProviderProtocol
 
 if TYPE_CHECKING:
-    from victor.core.container import ServiceContainer
+    from victor.framework.extensions import ServiceContainer
     from victor.config.settings import Settings
 
 logger = logging.getLogger(__name__)
@@ -72,7 +72,7 @@ class CodingServiceProvider(ServiceProviderProtocol):
             container: DI container to register services in
             settings: Application settings
         """
-        from victor.core.container import ServiceLifetime
+        from victor.framework.extensions import ServiceLifetime
 
         # Register CodeCorrectionMiddleware
         self._register_middleware(container, settings)
@@ -97,7 +97,7 @@ class CodingServiceProvider(ServiceProviderProtocol):
         settings: "Settings",
     ) -> None:
         """Register coding middleware services."""
-        from victor.core.container import ServiceLifetime
+        from victor.framework.extensions import ServiceLifetime
 
         def create_middleware(_):
             from victor_coding.middleware import CodeCorrectionMiddleware
@@ -118,7 +118,7 @@ class CodingServiceProvider(ServiceProviderProtocol):
         settings: "Settings",
     ) -> None:
         """Register coding safety extension."""
-        from victor.core.container import ServiceLifetime
+        from victor.framework.extensions import ServiceLifetime
 
         def create_safety(_):
             from victor_coding.safety import CodingSafetyExtension
@@ -137,7 +137,7 @@ class CodingServiceProvider(ServiceProviderProtocol):
         settings: "Settings",
     ) -> None:
         """Register coding prompt contributor."""
-        from victor.core.container import ServiceLifetime
+        from victor.framework.extensions import ServiceLifetime
 
         def create_prompts(_):
             from victor_coding.prompts import CodingPromptContributor
@@ -158,7 +158,7 @@ class CodingServiceProvider(ServiceProviderProtocol):
         settings: "Settings",
     ) -> None:
         """Register mode configuration provider."""
-        from victor.core.container import ServiceLifetime
+        from victor.framework.extensions import ServiceLifetime
         from victor.core.verticals.protocols import ModeConfigProviderProtocol
 
         def create_mode_config(_):
@@ -179,7 +179,7 @@ class CodingServiceProvider(ServiceProviderProtocol):
         settings: "Settings",
     ) -> None:
         """Register tool dependency provider."""
-        from victor.core.container import ServiceLifetime
+        from victor.framework.extensions import ServiceLifetime
         from victor.core.verticals.protocols import ToolDependencyProviderProtocol
 
         def create_tool_deps(_):

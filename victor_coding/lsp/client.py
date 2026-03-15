@@ -25,7 +25,7 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from victor_coding.lsp.config import LSPServerConfig
 
 # Use core LSP types from victor.protocols
-from victor.protocols.lsp_types import (
+from victor.framework.lsp import (
     Position,
     Range,
     Location,

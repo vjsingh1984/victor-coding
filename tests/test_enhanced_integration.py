@@ -24,7 +24,7 @@ from victor_coding.conversation_enhanced import (
     CodingContext,
     EnhancedCodingConversationManager,
 )
-from victor.agent.coordinators.safety_coordinator import SafetyAction, SafetyCategory
+from victor.framework.extensions import SafetyAction, SafetyCategory
 
 
 class TestCodingSafetyRules:
@@ -161,7 +161,7 @@ class TestEnhancedCodingSafetyExtension:
 
     def test_add_custom_rule(self):
         """Test adding a custom safety rule."""
-        from victor.agent.coordinators.safety_coordinator import SafetyRule
+        from victor.framework.extensions import SafetyRule
 
         extension = EnhancedCodingSafetyExtension()
 
@@ -185,7 +185,7 @@ class TestEnhancedCodingSafetyExtension:
         extension = EnhancedCodingSafetyExtension()
 
         # Add a temporary rule
-        from victor.agent.coordinators.safety_coordinator import SafetyRule
+        from victor.framework.extensions import SafetyRule
 
         temp_rule = SafetyRule(
             rule_id="temp_rule",
@@ -306,7 +306,7 @@ class TestEnhancedCodingConversationManager:
 
     def test_add_message(self):
         """Test adding a message."""
-        from victor.agent.coordinators.conversation_coordinator import TurnType
+        from victor.framework.extensions import TurnType
 
         manager = EnhancedCodingConversationManager()
 
@@ -356,7 +356,7 @@ class TestEnhancedCodingConversationManager:
 
     def test_get_coding_summary(self):
         """Test getting coding summary."""
-        from victor.agent.coordinators.conversation_coordinator import TurnType
+        from victor.framework.extensions import TurnType
 
         manager = EnhancedCodingConversationManager()
 
@@ -373,7 +373,7 @@ class TestEnhancedCodingConversationManager:
 
     def test_needs_summarization(self):
         """Test summarization threshold detection."""
-        from victor.agent.coordinators.conversation_coordinator import TurnType
+        from victor.framework.extensions import TurnType
 
         manager = EnhancedCodingConversationManager(
             summarization_threshold=5,
@@ -401,7 +401,7 @@ class TestEnhancedCodingConversationManager:
 
     def test_clear_history(self):
         """Test clearing conversation history."""
-        from victor.agent.coordinators.conversation_coordinator import TurnType
+        from victor.framework.extensions import TurnType
 
         manager = EnhancedCodingConversationManager()
 
