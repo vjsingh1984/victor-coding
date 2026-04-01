@@ -31,6 +31,7 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Type
 
 from victor.core.verticals.base import StageDefinition, VerticalBase, VerticalConfig
+from victor.core.verticals.registration import register_vertical
 from victor.core.verticals.protocols import (
     MiddlewareProtocol,
     SafetyExtensionProtocol,
@@ -50,6 +51,16 @@ from victor.framework.capabilities import (
 )
 
 
+@register_vertical(
+    name="coding",
+    version="2.0.0",
+    min_framework_version=">=0.6.0",
+    canonicalize_tool_names=True,
+    tool_dependency_strategy="auto",
+    strict_mode=False,
+    load_priority=100,  # High priority - default vertical
+    plugin_namespace="default",
+)
 class CodingAssistant(VerticalBase):
     """Software development assistant vertical.
 
