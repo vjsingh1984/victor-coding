@@ -21,7 +21,7 @@ from pathlib import Path
 import pytest
 
 from victor.config.settings import VICTOR_CONTEXT_FILE
-from victor.context.codebase_analyzer import (
+from victor.verticals.contrib.coding.codebase_analyzer import (
     ClassInfo,
     ModuleInfo,
     CodebaseAnalysis,
