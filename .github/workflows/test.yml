@@ -25,6 +25,8 @@ jobs:
           # Clone and install main victor framework from develop branch FIRST
           git clone --branch develop https://github.com/vjsingh1984/victor.git /tmp/victor-framework
           pip install -e /tmp/victor-framework
+          # Install victor-sdk (part of victor-ai monorepo, needed for tests)
+          pip install -e /tmp/victor-framework/victor-sdk
           # Now install the vertical (victor-ai already satisfies dependency)
           pip install -e ".[dev]"
 
