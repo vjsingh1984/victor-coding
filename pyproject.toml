@@ -37,6 +37,7 @@ classifiers = [
 ]
 dependencies = [
     "victor-ai>=0.6.0",  # Requires @register_vertical decorator and new SDK features
+    "numpy>=1.24",  # Required by victor.storage.embeddings (used by codebase search)
 ]
 
 [project.optional-dependencies]
