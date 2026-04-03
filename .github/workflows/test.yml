@@ -5,6 +5,8 @@ on:
     branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  repository_dispatch:
+    types: [core-compat-check]
 
 jobs:
   test:
@@ -22,8 +24,11 @@ jobs:
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
-          # Clone and install main victor framework from develop branch FIRST
-          git clone --branch develop https://github.com/vjsingh1984/victor.git /tmp/victor-framework
+          # Clone victor framework — uses dispatched ref when available, else develop
+          VICTOR_REF="${{ github.event.client_payload.victor_ref || 'develop' }}"
+          echo "Using victor ref: $VICTOR_REF"
+          git clone https://github.com/vjsingh1984/victor.git /tmp/victor-framework
+          cd /tmp/victor-framework && git checkout "$VICTOR_REF" && cd -
           pip install -e /tmp/victor-framework
           # Install victor-sdk (part of victor-ai monorepo, needed for tests)
           pip install -e /tmp/victor-framework/victor-sdk
