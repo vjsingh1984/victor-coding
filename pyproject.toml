@@ -87,6 +87,19 @@ coding-style = "victor_coding.protocols:CodeStyleCapabilityProvider"
 coding-test = "victor_coding.protocols:TestingCapabilityProvider"
 coding-refactor = "victor_coding.protocols:RefactoringCapabilityProvider"
 
+# Extended providers: sandbox isolation, permission hierarchy, hooks, compaction
+[project.entry-points."victor.sandbox.providers"]
+coding-sandbox = "victor_coding.protocols:CodingSandboxProvider"
+
+[project.entry-points."victor.permission.providers"]
+coding-permissions = "victor_coding.protocols:CodingPermissionProvider"
+
+[project.entry-points."victor.hook.providers"]
+coding-hooks = "victor_coding.protocols:CodingHookProvider"
+
+[project.entry-points."victor.compaction.providers"]
+coding-compaction = "victor_coding.protocols:CodingCompactionProvider"
+
 [tool.setuptools]
 packages = [
     "victor_coding",
