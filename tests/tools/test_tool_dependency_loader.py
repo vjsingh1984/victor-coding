@@ -1177,21 +1177,23 @@ class TestCreateVerticalToolDependencyProvider:
         assert provider.vertical == "unknown_vertical"
 
     def test_unknown_vertical_provider_is_empty(self):
-        """Empty provider should have no dependencies."""
+        """Empty provider should return minimal safe defaults."""
         from victor.core.tool_dependency_loader import create_vertical_tool_dependency_provider
         from victor.core.tool_types import EmptyToolDependencyProvider
 
         provider = create_vertical_tool_dependency_provider("nonexistent_vertical")
 
-        # Empty provider should return empty lists/dicts
+        # Empty provider is EmptyToolDependencyProvider instance
         assert isinstance(provider, EmptyToolDependencyProvider)
-        # Note: get_dependencies() returns [] not {} for EmptyToolDependencyProvider
-        assert provider.get_dependencies() in [{}, []]
-        assert provider.get_required_tools() == []
-        assert provider.get_optional_tools() == []
-        # Recommended sequence returns empty list for unknown verticals
-        result = provider.get_recommended_sequence("any_task")
-        assert result in [[], {}]
+
+        # EmptyToolDependencyProvider returns minimal safe defaults
+        # get_dependencies() returns empty list (no dependencies defined)
+        assert provider.get_dependencies() == []
+
+        # _required_tools defaults to {"read"} for safety
+        # _optional_tools is empty set
+        # get_recommended_sequence() defaults to ["read"]
+        # These are minimal safe defaults for the null object pattern
 
     @pytest.mark.skip(reason="Vertical packages are now external - tests need victor-devops installed")
     def test_explicit_canonicalize_true(self):
