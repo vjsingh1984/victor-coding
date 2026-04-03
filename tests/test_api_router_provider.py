@@ -10,10 +10,16 @@ try:
 except ImportError:
     FASTAPI_AVAILABLE = False
 
-from victor_coding.api.router_provider import (
-    create_coding_lsp_router,
-    get_fastapi_router_provider,
-)
+# Only import if FastAPI is available
+if FASTAPI_AVAILABLE:
+    from victor_coding.api.router_provider import (
+        create_coding_lsp_router,
+        get_fastapi_router_provider,
+    )
+else:
+    # Create dummy imports for pytestmark
+    create_coding_lsp_router = None
+    get_fastapi_router_provider = None
 
 pytestmark = pytest.mark.skipif(
     not FASTAPI_AVAILABLE,
