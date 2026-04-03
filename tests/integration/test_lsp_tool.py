@@ -24,8 +24,23 @@ from dataclasses import dataclass
 
 from victor.tools.lsp_tool import lsp, KIND_NAMES
 
+# Check if LSP capability is available
+try:
+    from victor.core.capability_registry import CapabilityRegistry
+    from victor.framework.vertical_protocols import LSPManagerProtocol
+
+    LSP_AVAILABLE = CapabilityRegistry.get_instance().get(LSPManagerProtocol) is not None
+except Exception:
+    LSP_AVAILABLE = False
+
 # Mark all tests in this module as integration tests (require victor-coding)
-pytestmark = pytest.mark.integration
+pytestmark = [
+    pytest.mark.integration,
+    pytest.mark.skipif(
+        not LSP_AVAILABLE,
+        reason="LSP capability not available. Requires victor-coding with LSP support"
+    ),
+]
 
 
 @dataclass

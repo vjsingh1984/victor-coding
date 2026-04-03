@@ -1165,29 +1165,30 @@ class TestCreateVerticalToolDependencyProvider:
         assert isinstance(provider, YAMLToolDependencyProvider)
         assert provider.vertical == "data_analysis"
 
-    def test_unknown_vertical_raises_error(self):
-        """Factory should raise ValueError for unknown vertical."""
+    def test_unknown_vertical_returns_empty_provider(self):
+        """Factory should return EmptyToolDependencyProvider for unknown vertical."""
+        from victor.core.tool_dependency_loader import (
+            create_vertical_tool_dependency_provider,
+            EmptyToolDependencyProvider,
+        )
+
+        provider = create_vertical_tool_dependency_provider("unknown_vertical")
+
+        # Should return an empty provider (Null Object pattern) instead of raising
+        assert isinstance(provider, EmptyToolDependencyProvider)
+        assert provider.vertical == "unknown_vertical"
+
+    def test_unknown_vertical_provider_is_empty(self):
+        """Empty provider should have no dependencies."""
         from victor.core.tool_dependency_loader import create_vertical_tool_dependency_provider
 
-        with pytest.raises(ValueError) as exc_info:
-            create_vertical_tool_dependency_provider("unknown_vertical")
+        provider = create_vertical_tool_dependency_provider("nonexistent_vertical")
 
-        assert "Unknown vertical 'unknown_vertical'" in str(exc_info.value)
-        assert "Available:" in str(exc_info.value)
-
-    def test_error_message_lists_available_verticals(self):
-        """Error message should list all available verticals."""
-        from victor.core.tool_dependency_loader import create_vertical_tool_dependency_provider
-
-        with pytest.raises(ValueError) as exc_info:
-            create_vertical_tool_dependency_provider("invalid")
-
-        error_msg = str(exc_info.value)
-        assert "coding" in error_msg
-        assert "devops" in error_msg
-        assert "research" in error_msg
-        assert "rag" in error_msg
-        assert "dataanalysis" in error_msg
+        # Empty provider should return empty lists/dicts
+        assert provider.get_dependencies() == {}
+        assert provider.get_required_tools() == []
+        assert provider.get_optional_tools() == []
+        assert provider.get_recommended_sequence("any_task") == []
 
     @pytest.mark.skip(reason="Vertical packages are now external - tests need victor-devops installed")
     def test_explicit_canonicalize_true(self):

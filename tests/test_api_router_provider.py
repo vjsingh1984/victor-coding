@@ -1,8 +1,23 @@
 """Tests for victor-coding FastAPI router provider."""
 
+import pytest
+
+# Check if FastAPI is available
+try:
+    import fastapi  # noqa: F401
+
+    FASTAPI_AVAILABLE = True
+except ImportError:
+    FASTAPI_AVAILABLE = False
+
 from victor_coding.api.router_provider import (
     create_coding_lsp_router,
     get_fastapi_router_provider,
+)
+
+pytestmark = pytest.mark.skipif(
+    not FASTAPI_AVAILABLE,
+    reason="FastAPI not installed. Install with: pip install fastapi"
 )
 
 

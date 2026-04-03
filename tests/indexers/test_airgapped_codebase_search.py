@@ -33,6 +33,22 @@ try:
 except ImportError:
     CHROMADB_AVAILABLE = False
 
+# Check if sentence-transformers is available
+try:
+    import sentence_transformers  # noqa: F401
+
+    SENTENCE_TRANSFORMERS_AVAILABLE = True
+except ImportError:
+    SENTENCE_TRANSFORMERS_AVAILABLE = False
+
+# Check if lancedb is available
+try:
+    import lancedb  # noqa: F401
+
+    LANCEDB_AVAILABLE = True
+except ImportError:
+    LANCEDB_AVAILABLE = False
+
 
 class TestEmbeddingConfigDefaults:
     """Test that EmbeddingConfig defaults are air-gapped."""
@@ -65,6 +81,10 @@ class TestEmbeddingConfigDefaults:
         assert config.embedding_api_key is None  # No API key needed
 
 
+@pytest.mark.skipif(
+    not SENTENCE_TRANSFORMERS_AVAILABLE,
+    reason="sentence-transformers not installed. Install with: pip install victor-ai[embeddings]"
+)
 class TestUnifiedEmbeddingModel:
     """Test unified embedding model strategy."""
 
@@ -166,6 +186,10 @@ class TestUnifiedEmbeddingModel:
         EmbeddingService.reset_instance()
 
 
+@pytest.mark.skipif(
+    not LANCEDB_AVAILABLE,
+    reason="lancedb not installed. Install with: pip install victor-ai[embeddings]"
+)
 class TestLanceDBProvider:
     """Test LanceDB provider for air-gapped deployments."""
 
@@ -338,6 +362,10 @@ class TestMemoryOptimization:
         # This test documents the memory benefit of unified model
 
 
+@pytest.mark.skipif(
+    not (SENTENCE_TRANSFORMERS_AVAILABLE and LANCEDB_AVAILABLE),
+    reason="sentence-transformers and lancedb required. Install with: pip install victor-ai[embeddings]"
+)
 class TestAirgappedDemo:
     """Test the air-gapped demo script functionality."""
 
