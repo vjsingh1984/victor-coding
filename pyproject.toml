@@ -36,7 +36,7 @@ classifiers = [
     "Topic :: Software Development",
 ]
 dependencies = [
-    "victor-ai>=0.6.0",  # Requires @register_vertical decorator and new SDK features
+    "victor-ai>=0.6.0,<1.0",  # Requires @register_vertical decorator and new SDK features
     "numpy>=1.24",  # Required by victor.storage.embeddings (used by codebase search)
 ]
 
@@ -57,7 +57,7 @@ Repository = "https://github.com/vjsingh1984/victor-coding"
 Documentation = "https://docs.victor.dev/verticals/coding"
 Issues = "https://github.com/vjsingh1984/victor-coding/issues"
 
-[project.entry-points."victor.verticals"]
+[project.entry-points."victor.plugins"]
 coding = "victor_coding.assistant:CodingAssistant"
 
 [project.entry-points."victor.tool_dependencies"]
