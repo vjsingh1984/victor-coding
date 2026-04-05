@@ -499,6 +499,144 @@ class RefactoringCapabilityProvider:
 
 
 # =============================================================================
+# Extended Protocol Implementations: Sandbox, Permissions, Hooks, Compaction
+# =============================================================================
+
+# Import new SDK protocols (optional, for forward compatibility)
+try:
+    from victor_sdk.verticals.protocols import (
+        SandboxProvider as SandboxProviderProtocol,
+        HookProvider as HookProviderProtocol,
+        PermissionProvider as PermissionProviderProtocol,
+        CompactionProvider as CompactionProviderProtocol,
+        McpProvider as McpProviderProtocol,
+    )
+except ImportError:
+    SandboxProviderProtocol = None
+    HookProviderProtocol = None
+    PermissionProviderProtocol = None
+    CompactionProviderProtocol = None
+    McpProviderProtocol = None
+
+
+class CodingSandboxProvider:
+    """Sandbox configuration for coding vertical.
+
+    Coding tasks need workspace write access but should be isolated
+    from the rest of the filesystem for safety.
+    """
+
+    def get_sandbox_config(self) -> Dict[str, Any]:
+        return {
+            "enabled": True,
+            "filesystem_mode": "workspace-only",
+            "namespace_restrictions": True,
+            "network_isolation": False,
+            "allowed_mounts": [],
+        }
+
+    def get_tool_sandbox_overrides(self) -> Dict[str, Dict[str, Any]]:
+        return {
+            # Docker tools need network and mount access
+            "docker": {
+                "network_isolation": False,
+                "filesystem_mode": "allow-list",
+                "allowed_mounts": ["/var/run/docker.sock"],
+            },
+            # Shell needs full workspace access
+            "shell": {
+                "filesystem_mode": "workspace-only",
+            },
+        }
+
+
+class CodingPermissionProvider:
+    """Permission configuration for coding vertical.
+
+    Coding uses workspace-write by default with explicit escalation
+    for shell execution and docker operations.
+    """
+
+    def get_permission_mode(self) -> str:
+        return "workspace-write"
+
+    def get_tool_permissions(self) -> Dict[str, str]:
+        return {
+            # Read-only tools
+            "read": "read-only",
+            "grep": "read-only",
+            "search": "read-only",
+            "code_search": "read-only",
+            "symbol": "read-only",
+            "ls": "read-only",
+            "find": "read-only",
+            "tree": "read-only",
+            "git_status": "read-only",
+            "git_diff": "read-only",
+            "git_log": "read-only",
+            "git_blame": "read-only",
+            "git_show": "read-only",
+            # Workspace-write tools
+            "write": "workspace-write",
+            "edit": "workspace-write",
+            "git_branch": "workspace-write",
+            "lint": "workspace-write",
+            "format": "workspace-write",
+            "rename": "workspace-write",
+            "extract": "workspace-write",
+            "inline": "workspace-write",
+            "doc_gen": "workspace-write",
+            # Danger/full-access tools
+            "shell": "danger-full-access",
+            "run_python": "danger-full-access",
+            "test": "danger-full-access",
+            "test_coverage": "danger-full-access",
+        }
+
+    def get_permission_escalation_rules(self) -> List[Dict[str, Any]]:
+        return [
+            {
+                "tool_pattern": "test*",
+                "from_mode": "workspace-write",
+                "to_mode": "danger-full-access",
+                "auto_approve": True,
+            },
+        ]
+
+
+class CodingHookProvider:
+    """Hook configuration for coding vertical.
+
+    Provides git safety hooks that prevent dangerous operations
+    like force pushing to main branches.
+    """
+
+    def get_pre_tool_hooks(self) -> List[str]:
+        return []
+
+    def get_post_tool_hooks(self) -> List[str]:
+        return []
+
+
+class CodingCompactionProvider:
+    """Compaction configuration for coding vertical.
+
+    Coding conversations often involve long code blocks that should
+    be preserved longer than regular text.
+    """
+
+    def get_compaction_config(self) -> Dict[str, Any]:
+        return {
+            "preserve_recent_messages": 6,
+            "max_estimated_tokens": 12000,
+            "auto_compact": False,
+        }
+
+    def get_compaction_priorities(self) -> List[str]:
+        return ["tool_result", "code_block", "error", "test_output"]
+
+
+# =============================================================================
 # Exports
 # =============================================================================
 
@@ -518,4 +656,9 @@ __all__ = [
     "CodeStyleCapabilityProvider",
     "TestingCapabilityProvider",
     "RefactoringCapabilityProvider",
+    # Sandbox, permission, hook, and compaction providers
+    "CodingSandboxProvider",
+    "CodingPermissionProvider",
+    "CodingHookProvider",
+    "CodingCompactionProvider",
 ]
