@@ -23,7 +23,11 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, List, Type
 
-from victor.core.verticals.protocols import ServiceProviderProtocol
+from victor_sdk.verticals import (
+    ModeConfigProviderProtocol,
+    ServiceProviderProtocol,
+    ToolDependencyProviderProtocol,
+)
 
 if TYPE_CHECKING:
     from victor.framework.extensions import ServiceContainer
@@ -159,7 +163,6 @@ class CodingServiceProvider(ServiceProviderProtocol):
     ) -> None:
         """Register mode configuration provider."""
         from victor.framework.extensions import ServiceLifetime
-        from victor.core.verticals.protocols import ModeConfigProviderProtocol
 
         def create_mode_config(_):
             from victor_coding.mode_config import CodingModeConfigProvider
@@ -180,7 +183,6 @@ class CodingServiceProvider(ServiceProviderProtocol):
     ) -> None:
         """Register tool dependency provider."""
         from victor.framework.extensions import ServiceLifetime
-        from victor.core.verticals.protocols import ToolDependencyProviderProtocol
 
         def create_tool_deps(_):
             from victor.core.tool_dependency_loader import (
@@ -209,11 +211,6 @@ class CodingServiceProvider(ServiceProviderProtocol):
         Returns:
             List of optional protocol types
         """
-        from victor.core.verticals.protocols import (
-            ModeConfigProviderProtocol,
-            ToolDependencyProviderProtocol,
-        )
-
         return [
             CodingMiddlewareProtocol,
             CodingSafetyProtocol,

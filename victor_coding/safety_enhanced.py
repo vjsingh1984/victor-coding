@@ -37,7 +37,7 @@ from victor.framework.extensions import (
     SafetyCoordinator,
     SafetyRule,
 )
-from victor.core.verticals.protocols import SafetyExtensionProtocol, SafetyPattern
+from victor_sdk.verticals import SafetyExtensionProtocol, SafetyPattern
 
 logger = logging.getLogger(__name__)
 

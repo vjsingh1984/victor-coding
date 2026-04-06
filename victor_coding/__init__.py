@@ -75,6 +75,7 @@ from victor_coding.capabilities import (
     get_coding_capabilities,
     create_coding_capability_loader,
 )
+from victor_coding.plugin import CodingPlugin, plugin
 
 # Import canonical tool dependency provider instead of deprecated class
 from victor.core.tool_dependency_loader import create_vertical_tool_dependency_provider
@@ -109,6 +110,8 @@ __all__ = [
     "CodingCapabilityProvider",
     "get_coding_capabilities",
     "create_coding_capability_loader",
+    "CodingPlugin",
+    "plugin",
     # Sandbox, permission, hook, and compaction providers
     "CodingSandboxProvider",
     "CodingPermissionProvider",

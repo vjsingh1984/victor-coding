@@ -34,7 +34,7 @@ from victor.security.safety.code_patterns import (
     BUILD_DEPLOY_PATTERNS,
     SENSITIVE_FILE_PATTERNS,
 )
-from victor.core.verticals.protocols import SafetyExtensionProtocol, SafetyPattern
+from victor_sdk.verticals import SafetyExtensionProtocol, SafetyPattern
 
 # Re-export core patterns with legacy names for backward compatibility
 GIT_DANGEROUS_PATTERNS: List[SafetyPattern] = GIT_PATTERNS

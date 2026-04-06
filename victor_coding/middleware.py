@@ -24,7 +24,7 @@ import logging
 import time
 from typing import Any, Dict, Optional, Set
 
-from victor.core.verticals.protocols import (
+from victor_sdk.verticals import (
     MiddlewarePriority,
     MiddlewareProtocol,
     MiddlewareResult,

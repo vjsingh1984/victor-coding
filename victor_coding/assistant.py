@@ -31,17 +31,10 @@ from __future__ import annotations
 from typing import Any, Dict, List, Optional, Type
 
 from victor.core.verticals.base import StageDefinition, VerticalBase, VerticalConfig
-from victor.core.verticals.registration import register_vertical
-from victor.core.verticals.protocols import (
+from victor_sdk.verticals import (
     MiddlewareProtocol,
-    SafetyExtensionProtocol,
-    PromptContributorProtocol,
-    ModeConfigProviderProtocol,
-    ToolDependencyProviderProtocol,
-    WorkflowProviderProtocol,
     ServiceProviderProtocol,
-    TieredToolConfig,
-    VerticalExtensions,
+    register_vertical,
 )
 
 # Phase 3: Import framework capabilities
