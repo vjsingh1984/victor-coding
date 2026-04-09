@@ -2669,7 +2669,11 @@ async def extract_graph_insights(root_path: Optional[str] = None) -> Dict[str, A
         Dictionary with graph insights
     """
     from pathlib import Path
-    from victor.tools.graph_tool import GraphAnalyzer, _load_graph
+    try:
+        from victor.tools.graph_tool import GraphAnalyzer, _load_graph
+    except ImportError:
+        GraphAnalyzer = None
+        _load_graph = None
     from victor_coding.codebase.graph.registry import create_graph_store
     from victor.core.schema import Tables
 
