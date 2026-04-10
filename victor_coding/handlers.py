@@ -40,7 +40,7 @@ from dataclasses import dataclass
 from typing import TYPE_CHECKING, Any, Dict, List
 
 if TYPE_CHECKING:
-    from victor.tools.registry import ToolRegistry
+    from victor_sdk.verticals.protocols.tools import ToolRegistryProtocol as ToolRegistry
     from victor.framework.extensions import ComputeNode
     from victor.framework.extensions import NodeResult, ExecutorNodeStatus, WorkflowContext
 
