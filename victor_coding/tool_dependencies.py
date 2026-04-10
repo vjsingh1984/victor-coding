@@ -82,7 +82,7 @@ class CodingToolDependencyProvider(YAMLToolDependencyProvider):
 
     Example:
         # Preferred (new code):
-        from victor.core.tool_dependency_loader import create_vertical_tool_dependency_provider
+        from victor.framework.extensions import create_vertical_tool_dependency_provider
         provider = create_vertical_tool_dependency_provider("coding")
 
         # Deprecated (backward compatible):
