@@ -120,7 +120,14 @@ class CodebaseAnalysis:
 
 
 class CodebaseAnalyzer:
-    """Analyzes codebases to extract structure and architecture (language-agnostic)."""
+    """Analyzes codebases to extract structure and architecture (language-agnostic).
+
+    Decomposition targets (SRP):
+    - SymbolExtractorMixin: _analyze_source_files through _categorize_class (lines 304-532)
+    - ArchitectureAnalyzerMixin: _identify_key_components through _extract_test_coverage (lines 534-950)
+    - CodebaseAnalyzer: __init__, analyze() facade, constants, _detect_package_layout
+    See victor_coding/codebase/symbol_extractor.py and architecture_analyzer.py.
+    """
 
     # Patterns that indicate key architectural components (universal across languages)
     KEY_CLASS_PATTERNS = {
@@ -208,40 +215,47 @@ class CodebaseAnalyzer:
     def analyze(self) -> CodebaseAnalysis:
         """Perform full codebase analysis (language-agnostic).
 
+        Delegates to SymbolExtractor and ArchitectureAnalyzer for SRP.
+
         Returns:
             Complete CodebaseAnalysis object.
         """
+        from victor_coding.codebase.symbol_extractor import SymbolExtractor
+        from victor_coding.codebase.architecture_analyzer import ArchitectureAnalyzer
+
         logger.info(f"Analyzing codebase at {self.root}")
 
-        # Step 1: Detect package/source layout (any language)
+        # Step 1: Detect package/source layout (stays here — lightweight)
         self._detect_package_layout()
 
-        # Step 2: Analyze source files (Python AST or regex for other languages)
-        self._analyze_source_files()
+        # Step 2: Symbol extraction (delegated)
+        extractor = SymbolExtractor(
+            root=self.root,
+            analysis=self.analysis,
+            include_dirs=self.include_dirs,
+            effective_skip_dirs=self.effective_skip_dirs,
+            language_extensions=self.LANGUAGE_EXTENSIONS,
+            key_class_patterns=self.KEY_CLASS_PATTERNS,
+        )
+        extractor.analyze_source_files()
 
-        # Step 3: Identify key components
-        self._identify_key_components()
-
-        # Step 4: Extract entry points from config files
-        self._extract_entry_points()
-
-        # Step 5: Detect architecture patterns
-        self._detect_architecture_patterns()
-
-        # Step 6: Find config files
-        self._find_config_files()
-
-        # Step 7: Extract dependencies from pyproject.toml/package.json
-        self._extract_dependencies()
-
-        # Step 8: Calculate LOC stats
-        self._calculate_loc_stats()
-
-        # Step 9: Extract top imports
-        self._extract_top_imports()
-
-        # Step 10: Try to get test coverage
-        self._extract_test_coverage()
+        # Steps 3-10: Architecture analysis (delegated)
+        arch = ArchitectureAnalyzer(
+            root=self.root,
+            analysis=self.analysis,
+            include_dirs=self.include_dirs,
+            effective_skip_dirs=self.effective_skip_dirs,
+            language_extensions=self.LANGUAGE_EXTENSIONS,
+            config_extensions=self.CONFIG_EXTENSIONS,
+        )
+        arch.identify_key_components()
+        arch.extract_entry_points()
+        arch.detect_architecture_patterns()
+        arch.find_config_files()
+        arch.extract_dependencies()
+        arch.calculate_loc_stats()
+        arch.extract_top_imports()
+        arch.extract_test_coverage()
 
         return self.analysis
 
