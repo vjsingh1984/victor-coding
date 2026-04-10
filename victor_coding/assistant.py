@@ -30,17 +30,18 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional, Type
 
-from victor.core.verticals.base import StageDefinition, VerticalBase, VerticalConfig
+from victor_sdk import (
+    FileOperationsCapability,
+    PromptContributionCapability,
+    StageDefinition,
+    ToolNames,
+    VerticalBase,
+    VerticalConfig,
+)
 from victor_sdk.verticals import (
     MiddlewareProtocol,
     ServiceProviderProtocol,
     register_vertical,
-)
-
-# Phase 3: Import framework capabilities
-from victor.framework.capabilities import (
-    FileOperationsCapability,
-    PromptContributionCapability,
 )
 
 
@@ -52,7 +53,7 @@ from victor.framework.capabilities import (
     tool_dependency_strategy="auto",
     strict_mode=False,
     load_priority=100,  # High priority - default vertical
-    plugin_namespace="default",
+    plugin_namespace="victor.coding",
 )
 class CodingAssistant(VerticalBase):
     """Software development assistant vertical.
@@ -91,6 +92,22 @@ class CodingAssistant(VerticalBase):
     name = "coding"
     description = "Software development assistant for code exploration, writing, and refactoring"
     version = "2.0.0"  # Extension support
+    VERTICAL_API_VERSION = 1
+
+    @classmethod
+    def get_name(cls) -> str:
+        return cls.name
+
+    @classmethod
+    def get_description(cls) -> str:
+        return cls.description
+
+    @classmethod
+    def get_skills(cls) -> list:
+        """Return coding skills for this vertical."""
+        from victor_coding.skills import CODING_SKILLS
+
+        return list(CODING_SKILLS)
 
     # =========================================================================
     # Phase 3: Framework Capabilities
@@ -122,8 +139,6 @@ class CodingAssistant(VerticalBase):
         Returns:
             List of tool names including filesystem, git, shell, and code tools.
         """
-        from victor.tools.tool_names import ToolNames
-
         # Phase 3: Start with framework file operations (read, write, edit, grep)
         # This reduces duplication and ensures consistency across verticals
         tools = cls._file_ops.get_tool_list()
@@ -205,8 +220,6 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
         Returns:
             Stage definitions optimized for software development workflow.
         """
-        from victor.tools.tool_names import ToolNames
-
         return {
             "INITIAL": StageDefinition(
                 name="INITIAL",
