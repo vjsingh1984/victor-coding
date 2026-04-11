@@ -3202,9 +3202,11 @@ RULES:
 - Configuration: 1–2 lines on how config works.
 - Architecture Notes: 3–5 bullet points on the system's key architectural patterns,
   data flow, or design decisions that would help a developer navigate the codebase.
-- OMIT these sections entirely (they waste tokens): Codebase Stats, Analyzer Coverage,
-  Graph Health, Performance Hints, Code Structure counts, Named Implementations,
-  Embeddings & Chunking, Frequently Asked Questions, raw PageRank data.
+  INCLUDE graph insights if present: inheritance backbone (most-subclassed base classes),
+  hub classes (high connectivity), coupling hotspots, and key modules by role.
+- Codebase Scale: one line with total symbols, files, and graph edges if available.
+- OMIT these sections entirely (they waste tokens): Analyzer Coverage,
+  Performance Hints, Embeddings & Chunking, raw PageRank numbers, graph node IDs.
 - Do NOT include sections about the indexer or analysis tooling — this file is about
   the PROJECT, not the tool that generated it.
 - End with a one-line note: "Run `/init --update` to refresh after code changes."
