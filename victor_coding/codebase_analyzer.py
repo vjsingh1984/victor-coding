@@ -2918,6 +2918,7 @@ async def generate_enhanced_init_md(
     include_dirs: Optional[List[str]] = None,
     exclude_dirs: Optional[List[str]] = None,
     auto_index: bool = True,
+    agent: Optional[Any] = None,
 ) -> str:
     """Generate init.md using symbol index, conversation insights, and optional LLM.
 
@@ -3188,116 +3189,34 @@ async def generate_enhanced_init_md(
                 "graph", "No graph data (run 'victor index' or enable auto_index)", complete=True
             )
 
-    # Step 3: Deep - Use LLM to synthesize a compact init.md from the raw data
+    # Step 3: Deep - Use Agent framework to synthesize init.md (full observability)
     if not use_llm:
         return base_content
 
     progress("deep", "Synthesizing init.md with LLM...")
 
     try:
+        from victor.framework.init_synthesizer import InitSynthesizer
         from victor_coding.compat.settings import load_settings as _load
-        from victor.providers.registry import ProviderRegistry
 
         settings = _load()
-        provider_name = settings.default_provider
-        model_name = settings.default_model
-        provider_settings = settings.get_provider_settings(provider_name)
-        provider = ProviderRegistry.create(provider_name, **provider_settings)
+        provider_name = getattr(settings, "default_provider", "ollama")
+        model_name = getattr(settings, "default_model", None)
 
-        if not provider:
-            logger.warning(f"Could not get provider {provider_name}, skipping LLM")
-            return base_content
-
-        synthesize_prompt = f"""You are writing an init.md file — a compact system-prompt context
-file that an AI coding assistant reads at the start of every conversation about this codebase.
-
-Below is raw auto-generated data about the project. Your job is to SYNTHESIZE it into a
-compact, high-signal init.md (target: 80–120 lines, under 2000 tokens).
-
-RULES:
-- Write project-specific content only. No generic advice.
-- Use these sections in order: Project Overview, Package Layout, Key Entry Points,
-  Development Commands, Dependencies, Configuration, Architecture Notes.
-- Project Overview: 2–3 sentences covering what the project is, its primary language,
-  and its key capabilities.
-- Package Layout: table with Path, Description. Only include directories that exist.
-  Omit archive/legacy dirs unless critical.
-- Key Entry Points: table with Component, Path, Description. Pick the 8–12 most
-  architecturally important classes/functions — entry points, facades, registries,
-  core abstractions. NOT alphabetically sorted Manager classes.
-- Development Commands: the essential build/test/run commands in a code block.
-- Dependencies: one line listing core deps count and top 5–8 packages.
-- Configuration: 1–2 lines on how config works.
-- Architecture Notes: 3–5 bullet points on the system's key architectural patterns,
-  data flow, or design decisions that would help a developer navigate the codebase.
-  INCLUDE graph insights if present: inheritance backbone (most-subclassed base classes),
-  hub classes (high connectivity), coupling hotspots, and key modules by role.
-- Codebase Scale: one line with total symbols, files, and graph edges if available.
-- OMIT these sections entirely (they waste tokens): Analyzer Coverage,
-  Performance Hints, Embeddings & Chunking, raw PageRank numbers, graph node IDs.
-- Do NOT include sections about the indexer or analysis tooling — this file is about
-  the PROJECT, not the tool that generated it.
-- End with a one-line note: "Run `/init --update` to refresh after code changes."
-
-RAW DATA:
-
-```markdown
-{base_content}
-```
-
-Return ONLY the final init.md markdown. No preamble, no explanation."""
-
-        messages = [Message(role="user", content=synthesize_prompt)]
-
-        # Emit usage events for GEPA trace collection
-        import time as _time
-
-        _usage_logger = _get_init_usage_logger()
-        _start = _time.monotonic()
-        _usage_logger.log_event(
-            "tool_call",
-            {
-                "tool_name": "init_llm_synthesis",
-                "tool_args": {
-                    "provider": provider_name,
-                    "model": model_name,
-                    "prompt_chars": len(synthesize_prompt),
-                    "base_content_lines": len(base_content.splitlines()),
-                },
-            },
-        )
-
-        response = await provider.chat(messages, model=model_name)
-        synthesized = response.content.strip()
-        _elapsed = (_time.monotonic() - _start) * 1000
-
-        _success = synthesized.startswith("#") or synthesized.startswith("```")
-        _usage_logger.log_event(
-            "tool_result",
-            {
-                "tool_name": "init_llm_synthesis",
-                "success": _success,
-                "duration_ms": round(_elapsed, 1),
-                "result_lines": len(synthesized.splitlines()),
-                "provider": provider_name,
-                "model": model_name,
-            },
+        synthesizer = InitSynthesizer()
+        synthesized = await synthesizer.synthesize(
+            base_content,
+            agent=agent,  # Reuse orchestrator from slash command (None for CLI)
+            provider=provider_name,
+            model=model_name,
         )
 
         progress("deep", "LLM synthesis complete", complete=True)
 
-        # Validate and clean response
-        if _success:
-            if synthesized.startswith("```"):
-                lines = synthesized.split("\n")
-                lines = lines[1:] if lines[0].startswith("```") else lines
-                lines = lines[:-1] if lines and lines[-1].strip() == "```" else lines
-                synthesized = "\n".join(lines)
-            await provider.close()
+        if synthesized:
             return synthesized
 
-        logger.warning("LLM response doesn't look like valid markdown")
-        await provider.close()
+        logger.warning("Init synthesis returned empty — using raw base content")
         return base_content
 
     except Exception as e:
