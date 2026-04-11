@@ -2836,6 +2836,42 @@ async def extract_graph_insights(root_path: Optional[str] = None) -> Dict[str, A
 
                 insights["module_coupling"] = coupling_issues[:5]
 
+            # Most-inherited classes (architecture backbone)
+            try:
+                cur = conn.execute(f"""
+                    SELECT dst_n.name, dst_n.file, dst_n.line, COUNT(*) as subclass_count
+                    FROM {_ET} e
+                    JOIN {_NT} dst_n ON e.dst = dst_n.node_id
+                    WHERE e.type = 'INHERITS' AND dst_n.type = 'class'
+                    GROUP BY e.dst
+                    ORDER BY subclass_count DESC
+                    LIMIT 10
+                """)
+                insights["inheritance_backbone"] = [
+                    {"name": r[0], "file": r[1], "line": r[2], "subclasses": r[3]}
+                    for r in cur.fetchall()
+                    if r[3] >= 3
+                ]
+            except Exception:
+                pass
+
+            # Largest files by symbol count (potential god files)
+            try:
+                cur = conn.execute(f"""
+                    SELECT file, COUNT(*) as symbol_count
+                    FROM {_NT}
+                    WHERE type IN ('function', 'class')
+                    GROUP BY file
+                    ORDER BY symbol_count DESC
+                    LIMIT 10
+                """)
+                insights["largest_files"] = [
+                    {"file": r[0], "symbols": r[1]}
+                    for r in cur.fetchall()
+                ]
+            except Exception:
+                pass
+
         finally:
             conn.close()
 
