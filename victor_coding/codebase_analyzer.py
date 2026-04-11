@@ -3124,6 +3124,25 @@ async def generate_enhanced_init_md(
                 )
             graph_section.append("")
 
+        # Inheritance backbone (most-subclassed types)
+        if graph_insights.get("inheritance_backbone"):
+            graph_section.append("### Inheritance Backbone\n")
+            graph_section.append("| Base Class | Subclasses | Location |")
+            graph_section.append("|------------|------------|----------|")
+            for cls in graph_insights["inheritance_backbone"][:8]:
+                line_ref = f":{cls['line']}" if cls.get("line") else ""
+                graph_section.append(
+                    f"| `{cls['name']}` | {cls['subclasses']} | {cls['file']}{line_ref} |"
+                )
+            graph_section.append("")
+
+        # Largest files by symbol count
+        if graph_insights.get("largest_files"):
+            graph_section.append("### Largest Files (by symbol count)\n")
+            for f in graph_insights["largest_files"][:8]:
+                graph_section.append(f"- `{f['file']}` — {f['symbols']} symbols")
+            graph_section.append("")
+
         # Insert before Important Notes
         if "## Important Notes" in base_content:
             parts = base_content.split("## Important Notes")
