@@ -307,10 +307,10 @@ class EnhancedCodingSafetyExtension(SafetyExtensionProtocol):
             List of safety patterns for dangerous bash commands
         """
         # Return patterns compatible with legacy safety system
-        from victor.security.safety.code_patterns import (
+        from victor_sdk.safety_patterns import (
+            BUILD_DEPLOY_PATTERNS,
             GIT_PATTERNS,
             PACKAGE_MANAGER_PATTERNS,
-            BUILD_DEPLOY_PATTERNS,
         )
 
         patterns: List[SafetyPattern] = []
@@ -326,7 +326,7 @@ class EnhancedCodingSafetyExtension(SafetyExtensionProtocol):
         Returns:
             List of safety patterns for file operations
         """
-        from victor.security.safety.code_patterns import SENSITIVE_FILE_PATTERNS
+        from victor_sdk.safety_patterns import SENSITIVE_FILE_PATTERNS
 
         return SENSITIVE_FILE_PATTERNS if self._enable_custom_rules else []
 

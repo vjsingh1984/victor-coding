@@ -26,13 +26,13 @@ from __future__ import annotations
 
 from typing import Dict, List
 
-from victor.security.safety.code_patterns import (
-    CodePatternScanner,
-    GIT_PATTERNS,
-    REFACTORING_PATTERNS,
-    PACKAGE_MANAGER_PATTERNS,
+from victor_sdk.safety_patterns import (
     BUILD_DEPLOY_PATTERNS,
+    GIT_PATTERNS,
+    PACKAGE_MANAGER_PATTERNS,
+    REFACTORING_PATTERNS,
     SENSITIVE_FILE_PATTERNS,
+    CodePatternScanner,
 )
 from victor_sdk.verticals import SafetyExtensionProtocol, SafetyPattern
 
@@ -182,10 +182,10 @@ Example:
         print(f"Blocked: {reason}")
 """
 
-from victor.framework.config import SafetyEnforcer, SafetyRule, SafetyLevel
+from victor_sdk.safety_policy import SafetyEnforcer, SafetyRule, SafetyLevel
 
 # Generic safety rules re-exported from framework layer
-from victor.framework.safety import (  # noqa: F401
+from victor_sdk.safety_policy import (  # noqa: F401
     create_git_safety_rules,
     create_file_safety_rules,
 )
