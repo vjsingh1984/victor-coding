@@ -28,7 +28,7 @@ The CodingAssistant provides:
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Optional, Type
+from typing import Any, Dict, List, Optional
 
 from victor_sdk import (
     FileOperationsCapability,
@@ -438,12 +438,13 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
         """
         registrations = []
         try:
-            from victor.framework.vertical_protocols import (
-                TreeSitterParserProtocol,
-                EditorProtocol,
+            from victor_sdk.capability_runtime import (
                 CodebaseIndexFactoryProtocol,
+                EditorProtocol,
+                TreeSitterParserProtocol,
+                create_lazy_capability_proxy,
+                detect_enhanced_index_factory,
             )
-            from victor.core.plugins.context import _LazyCapabilityProxy
 
             # Tree-sitter parser (lazy — imports tree_sitter_manager on first access)
             def _load_ts():
@@ -452,7 +453,7 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
                 return mod
 
             registrations.append(
-                (TreeSitterParserProtocol, _LazyCapabilityProxy(_load_ts))
+                (TreeSitterParserProtocol, create_lazy_capability_proxy(_load_ts))
             )
 
             # Editor (lazy)
@@ -462,12 +463,11 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
                 return getattr(mod, "FileEditor")()
 
             registrations.append(
-                (EditorProtocol, _LazyCapabilityProxy(_load_editor))
+                (EditorProtocol, create_lazy_capability_proxy(_load_editor))
             )
 
             # Codebase index factory (lazy)
             def _load_index_factory():
-                from victor.core.search.indexer import detect_enhanced_index_factory
                 return detect_enhanced_index_factory()
 
             factory = _load_index_factory()

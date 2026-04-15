@@ -20,7 +20,7 @@ from the RL system, specialized for coding tasks.
 
 from typing import Any, Dict, List, Optional
 
-from victor.framework.rl import RLManager, get_rl_coordinator
+from victor_sdk.rl_runtime import RLManager, get_rl_coordinator
 from victor_sdk.rl import LearnerType
 from victor_coding.rl.config import CodingRLConfig, get_default_config
 

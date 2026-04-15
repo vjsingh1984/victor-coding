@@ -1721,7 +1721,7 @@ async def generate_victor_md_with_llm(
     Returns:
         Generated content for .victor/init.md.
     """
-    from victor.providers.base import Message
+    from victor_sdk.provider_runtime import Message
 
     # Gather project context
     context = gather_project_context(
@@ -2937,8 +2937,6 @@ async def generate_enhanced_init_md(
     """
     import time
 
-    from victor.providers.base import Message
-
     step_times: dict = {}
     step_start: float = 0
 
@@ -3196,7 +3194,7 @@ async def generate_enhanced_init_md(
     progress("deep", "Synthesizing init.md with LLM...")
 
     try:
-        from victor.framework.init_synthesizer import InitSynthesizer
+        from victor_sdk.init_runtime import InitSynthesizer
         from victor_coding.compat.settings import load_settings as _load
 
         settings = _load()
