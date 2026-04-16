@@ -1,7 +1,11 @@
-"""Settings access — isolates victor.config.settings imports.
+"""Settings access — SDK-first with framework fallback.
 
 External verticals should use these helpers instead of importing
-get_project_paths/load_settings directly from victor.config.settings.
+directly from victor.config.settings. Resolution order:
+
+1. victor_sdk.verticals.protocols.config (SDK protocol — no framework dependency)
+2. victor.config.settings (framework — deferred import)
+3. _MinimalPaths fallback (standalone — no victor-ai at all)
 """
 
 from __future__ import annotations
@@ -17,22 +21,32 @@ VICTOR_CONTEXT_FILE: str = "init.md"
 
 
 def get_project_paths(project_root: Optional[str] = None) -> Any:
-    """Get project paths via victor's settings, or return a minimal fallback.
+    """Get project paths via SDK protocol, framework, or minimal fallback."""
+    root = project_root or str(Path.cwd())
 
-    Isolates the victor.config.settings import to this single module.
-    """
+    # 1. SDK protocol (preferred — no framework coupling)
+    try:
+        from victor_sdk.verticals.protocols.config import ProjectPathsData
+
+        return ProjectPathsData(project_root=root)
+    except ImportError:
+        pass
+
+    # 2. Framework (deferred import)
     try:
         from victor.config.settings import get_project_paths as _get_paths
 
         return _get_paths(project_root)
     except ImportError:
-        logger.debug("victor-ai not installed — using minimal project paths")
-        root = Path(project_root) if project_root else Path.cwd()
-        return _MinimalPaths(root)
+        pass
+
+    # 3. Minimal fallback
+    logger.debug("victor-ai/victor-sdk not installed — using minimal project paths")
+    return _MinimalPaths(Path(root))
 
 
 def load_settings() -> Any:
-    """Load settings via victor, or return a minimal dict fallback."""
+    """Load settings via framework, or return empty dict fallback."""
     try:
         from victor.config.settings import load_settings as _load
 
@@ -42,17 +56,22 @@ def load_settings() -> Any:
         return {}
 
 
-# Try to import the real context file name
+# Try to import the real context file name from SDK then framework
 try:
-    from victor.config.settings import VICTOR_CONTEXT_FILE as _VCF
+    from victor_sdk.verticals.protocols.config import ProjectPathsData as _PPD
 
-    VICTOR_CONTEXT_FILE = _VCF
-except ImportError:
-    pass
+    VICTOR_CONTEXT_FILE = _PPD.context_file_name  # type: ignore[attr-defined]
+except (ImportError, AttributeError):
+    try:
+        from victor.config.settings import VICTOR_CONTEXT_FILE as _VCF
+
+        VICTOR_CONTEXT_FILE = _VCF
+    except ImportError:
+        pass
 
 
 class _MinimalPaths:
-    """Minimal ProjectPaths fallback when victor-ai is not installed."""
+    """Minimal ProjectPaths fallback when neither SDK nor framework is installed."""
 
     def __init__(self, root: Path):
         self._root = root
