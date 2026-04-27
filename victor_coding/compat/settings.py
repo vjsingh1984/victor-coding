@@ -105,8 +105,8 @@ class _MinimalPaths:
         return self.victor_dir / "backups"
 
     @property
-    def conversation_db(self) -> Path:
-        return self.victor_dir / "conversation.db"
+    def project_db(self) -> Path:
+        return self.victor_dir / "project.db"
 
     @property
     def global_embeddings_dir(self) -> Path:

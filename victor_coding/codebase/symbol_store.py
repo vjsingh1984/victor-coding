@@ -182,13 +182,21 @@ class SymbolStore:
 
         self._init_db()
 
+    def _resolve_search_path(self, path: str | Path) -> Path:
+        """Normalize include/search paths against the resolved project root."""
+        raw_path = Path(path)
+        return raw_path.resolve() if raw_path.is_absolute() else (self.root / raw_path).resolve()
+
+    def _relative_path(self, file_path: Path) -> str:
+        """Return a stable project-relative path from any symlink-normalized file path."""
+        return str(file_path.resolve().relative_to(self.root))
+
     @property
     def _db_path(self) -> Path:
-        """Path to SQLite database (shared with conversation.db)."""
+        """Path to the canonical project-local SQLite database."""
         from victor_coding.compat.settings import get_project_paths
 
-        # Use the same database as conversation history for consolidation
-        return get_project_paths(self.root).conversation_db
+        return get_project_paths(self.root).project_db
 
     def _init_db(self) -> None:
         """Initialize SQLite database schema."""
@@ -325,7 +333,9 @@ class SymbolStore:
         current_files: Set[str] = set()
         source_files = []
         search_paths = (
-            [self.root / d for d in self.include_dirs] if self.include_dirs else [self.root]
+            [self._resolve_search_path(d) for d in self.include_dirs]
+            if self.include_dirs
+            else [self.root]
         )
 
         for search_path in search_paths:
@@ -335,7 +345,7 @@ class SymbolStore:
                 for file_path in search_path.rglob(f"*{ext}"):
                     if not self.should_ignore(file_path) and file_path.is_file():
                         source_files.append(file_path)
-                        current_files.add(str(file_path.relative_to(self.root)))
+                        current_files.add(self._relative_path(file_path))
 
         print(f"Found {len(source_files)} source files")
 
@@ -358,7 +368,7 @@ class SymbolStore:
                 if not language:
                     continue
 
-                rel_path = str(file_path.relative_to(self.root))
+                rel_path = self._relative_path(file_path)
 
                 # Check if file needs reindexing
                 if not force and not self._needs_reindex(conn, file_path):
@@ -472,7 +482,7 @@ class SymbolStore:
 
     def _needs_reindex(self, conn: sqlite3.Connection, file_path: Path) -> bool:
         """Check if file needs reindexing based on modification time."""
-        rel_path = str(file_path.relative_to(self.root))
+        rel_path = self._relative_path(file_path)
         cursor = conn.execute(
             "SELECT last_modified, content_hash FROM files WHERE path = ?", (rel_path,)
         )
@@ -497,7 +507,7 @@ class SymbolStore:
         content = file_path.read_bytes()
         content_hash = hashlib.sha256(content).hexdigest()[:16]
         lines = content.count(b"\n") + 1
-        rel_path = str(file_path.relative_to(self.root))
+        rel_path = self._relative_path(file_path)
 
         # Determine file type: config if extension in CONFIG_EXTENSIONS, else source
         file_ext = file_path.suffix.lower()
@@ -559,7 +569,7 @@ class SymbolStore:
             - parse_error is None if successful, otherwise contains the error message
         """
         content = file_path.read_text(encoding="utf-8", errors="ignore")
-        rel_path = str(file_path.relative_to(self.root))
+        rel_path = self._relative_path(file_path)
         parse_error = None
 
         if language == "python":
