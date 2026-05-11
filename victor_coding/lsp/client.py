@@ -25,14 +25,12 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from victor_coding.lsp.config import LSPServerConfig
 
 # Use core LSP types from victor.protocols
-from victor.framework.lsp import (
+from victor_sdk.lsp_runtime import (
     Position,
     Range,
     Location,
     Diagnostic,
-    DiagnosticSeverity,
     CompletionItem,
-    CompletionItemKind,
     Hover,
 )
 
@@ -219,7 +217,7 @@ class LSPClient:
             return result
         except asyncio.TimeoutError:
             del self._pending_requests[request_id]
-            raise TimeoutError(f"Request {method} timed out")
+            raise TimeoutError(f"Request {method} timed out") from None
 
     def _send_notification(self, method: str, params: Any) -> None:
         """Send a notification to the server (no response expected)."""
