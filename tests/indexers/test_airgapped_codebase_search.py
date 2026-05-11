@@ -64,9 +64,9 @@ class TestEmbeddingConfigDefaults:
         assert config.embedding_model_type == "sentence-transformers"
 
     def test_default_embedding_model_is_unified(self):
-        """Test that default model is all-MiniLM-L12-v2 (unified model)."""
+        """Test that default model is BAAI/bge-small-en-v1.5 (unified model)."""
         config = EmbeddingConfig()
-        assert config.embedding_model_name == "all-MiniLM-L12-v2"
+        assert config.embedding_model_name == "BAAI/bge-small-en-v1.5"
 
     def test_default_distance_metric_is_cosine(self):
         """Test that default distance metric is cosine."""

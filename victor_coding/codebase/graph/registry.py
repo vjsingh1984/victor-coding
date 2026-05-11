@@ -27,8 +27,10 @@ except ImportError:
 
 
 def create_graph_store(
+    name: str = "sqlite",
     project_path: Optional[str] = None,
-    backend: str = "sqlite",
+    *,
+    backend: Optional[str] = None,
     **kwargs: Any,
 ) -> Optional[Any]:
     """Create a graph store via victor's registry.
@@ -38,7 +40,10 @@ def create_graph_store(
     if not _VICTOR_AVAILABLE:
         logger.debug("victor-ai not installed — graph store unavailable")
         return None
-    return _create_graph_store(project_path=project_path, backend=backend, **kwargs)
+
+    # Use backend keyword arg if provided, otherwise use name positional
+    effective_backend = backend if backend is not None else name
+    return _create_graph_store(name=name, project_path=project_path, backend=effective_backend, **kwargs)
 
 
 __all__ = [

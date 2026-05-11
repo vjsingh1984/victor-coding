@@ -25,7 +25,14 @@ from typing import Any, Callable, Dict, List, Optional, Tuple
 from victor_coding.lsp.config import LSPServerConfig
 
 # Use core LSP types from victor.protocols
-from victor_sdk.lsp_runtime import Position, Location, Diagnostic, CompletionItem, Hover
+from victor_sdk.lsp_runtime import (
+    Position,
+    Range,
+    Location,
+    Diagnostic,
+    CompletionItem,
+    Hover,
+)
 
 logger = logging.getLogger(__name__)
 
