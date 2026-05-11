@@ -190,7 +190,7 @@ class TestRefreshPluginsClearsExtensionCache:
                     loader.refresh_plugins()
 
                     # Verify entry point cache invalidation
-                    mock_cache.invalidate.assert_any_call("victor.verticals")
+                    mock_cache.invalidate.assert_any_call("victor.plugins")
                     mock_cache.invalidate.assert_any_call("victor.tools")
 
     def test_refresh_plugins_resets_loader_extension_state(self):
