@@ -36,22 +36,31 @@ classifiers = [
     "Topic :: Software Development",
 ]
 dependencies = [
-    "victor-sdk[yaml]>=0.6.0,<1.0",  # Definition-layer contract for external verticals
-    "numpy>=1.24",  # Required by victor.storage.embeddings (used by codebase search)
+    "victor-contracts[yaml]>=0.6.0,<1.0",  # Definition-layer contract for external verticals
+    "numpy>=1.24,<2.3",  # Required by victor.storage.embeddings; numba-compatible
 ]
 
 [project.optional-dependencies]
 runtime = [
-    "victor-ai>=0.6.0,<1.0",  # Runtime support - optional, SDK-first architecture
+    "victor-ai>=0.6.0,<1.0",  # Runtime support - optional, contract-first architecture
+]
+native = [
+    # Native extensions are handled by maturin
+    # Install with: pip install -e .[native]
+    # or build with: maturin develop --release
 ]
 dev = [
     "pytest>=8.0",
     "pytest-asyncio>=0.23",
     "pytest-cov>=4.1",
     "pytest-xdist>=3.0",
+    "pytest-benchmark>=5.0",
     "black==26.1.0",
     "ruff>=0.5",
     "mypy>=1.10",
+]
+native-dev = [
+    "maturin>=1.0,<2.0",  # Build Rust extensions
 ]
 
 [project.urls]
@@ -86,19 +95,20 @@ coding = "victor_coding.capabilities:CodingCapabilityProvider"
 
 [project.entry-points."victor.service_providers"]
 coding = "victor_coding.service_provider:CodingServiceProvider"
+coding-performance = "victor_coding.performance.service_provider:PerformanceServiceProvider"
 
 [project.entry-points."victor.team_spec_providers"]
 coding = "victor_coding.teams:CodingTeamSpecProvider"
 
-# NEW: Victor SDK Protocol implementations
-[project.entry-points."victor.sdk.protocols"]
+# Victor extension protocol implementations
+[project.entry-points."victor.extension.protocols"]
 coding-tools = "victor_coding.protocols:CodingToolProvider"
 coding-safety = "victor_coding.protocols:CodingSafetyProvider"
 coding-prompts = "victor_coding.protocols:CodingPromptProvider"
 coding-workflows = "victor_coding.protocols:CodingWorkflowProvider"
 
-# NEW: Victor SDK Capability providers
-[project.entry-points."victor.sdk.capabilities"]
+# Victor extension capability providers
+[project.entry-points."victor.extension.capabilities"]
 coding-lsp = "victor_coding.protocols:LSPCapabilityProvider"
 coding-git = "victor_coding.protocols:GitCapabilityProvider"
 coding-style = "victor_coding.protocols:CodeStyleCapabilityProvider"

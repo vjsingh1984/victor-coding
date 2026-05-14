@@ -12,20 +12,20 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-"""Victor SDK Protocol implementations for victor-coding.
+"""Victor extension protocol implementations for victor-coding.
 
 This module provides protocol implementations that can be discovered via
-the victor-sdk entry point system, enabling the coding vertical to
+the Victor extension entry point system, enabling the coding vertical to
 register capabilities with the framework without direct dependencies.
 
 Entry Points:
-    [project.entry-points."victor.sdk.protocols"]
+    [project.entry-points."victor.extension.protocols"]
     coding-tools = "victor_coding.protocols:CodingToolProvider"
     coding-safety = "victor_coding.protocols:CodingSafetyProvider"
     coding-prompts = "victor_coding.protocols:CodingPromptProvider"
     coding-workflows = "victor_coding.protocols:CodingWorkflowProvider"
 
-    [project.entry-points."victor.sdk.capabilities"]
+    [project.entry-points."victor.extension.capabilities"]
     coding-lsp = "victor_coding.protocols:LSPCapabilityProvider"
     coding-git = "victor_coding.protocols:GitCapabilityProvider"
 """
@@ -35,9 +35,9 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-# Import victor-sdk protocols (NO runtime dependency on victor-ai!)
+# Import victor-contracts protocols (NO runtime dependency on victor-ai!)
 try:
-    from victor_sdk.verticals.protocols import (
+    from victor_contracts.verticals.protocols import (
         PromptProvider,
         SafetyProvider,
         ToolProvider,
@@ -68,6 +68,7 @@ except ImportError:
         def get_workflows(self) -> Dict[str, Any]: ...
         def get_workflow(self, name: str) -> Optional[Any]: ...
         def list_workflows(self) -> List[str]: ...
+
 
 # Try to import existing victor-coding implementations (may not exist in older versions)
 try:
@@ -259,10 +260,21 @@ class CodingPromptProvider(PromptProvider):
 
         # Default system prompt sections
         return {
-            "role": "You are a coding assistant specializing in software development, debugging, and code generation.",
-            "expertise": "You have expertise in Python, TypeScript, JavaScript, and many other programming languages.",
-            "safety": "Always follow git safety best practices. Never force push to main branches without review.",
-            "best_practices": "Follow clean code principles: meaningful names, small functions, DRY, SOLID.",
+            "role": (
+                "You are a coding assistant specializing in software development, "
+                "debugging, and code generation."
+            ),
+            "expertise": (
+                "You have expertise in Python, TypeScript, JavaScript, and many other "
+                "programming languages."
+            ),
+            "safety": (
+                "Always follow git safety best practices. Never force push to main "
+                "branches without review."
+            ),
+            "best_practices": (
+                "Follow clean code principles: meaningful names, small functions, " "DRY, SOLID."
+            ),
         }
 
     def get_task_type_hints(self) -> Dict[str, Any]:
@@ -367,7 +379,7 @@ class CodingWorkflowProvider(WorkflowProvider):
 
 
 # =============================================================================
-# Capability Providers (for victor.sdk.capabilities entry point)
+# Capability Providers (for victor.extension.capabilities entry point)
 # =============================================================================
 
 
@@ -495,9 +507,9 @@ class RefactoringCapabilityProvider:
 # Extended Protocol Implementations: Sandbox, Permissions, Hooks, Compaction
 # =============================================================================
 
-# Import new SDK protocols (optional, for forward compatibility)
+# Import extension protocols (optional, for forward compatibility)
 try:
-    from victor_sdk.verticals.protocols import (
+    from victor_contracts.verticals.protocols import (
         SandboxProvider as SandboxProviderProtocol,
         HookProvider as HookProviderProtocol,
         PermissionProvider as PermissionProviderProtocol,
