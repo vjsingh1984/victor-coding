@@ -73,7 +73,7 @@ def test_public_docs_use_contract_first_wording() -> None:
 
     for file_name in files:
         source = (_REPO_ROOT / file_name).read_text(encoding="utf-8")
-        assert "SDK-first" not in source
+        assert "SDK" "-first" not in source
         assert "SDK" "-only" not in source
 
 
