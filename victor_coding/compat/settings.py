@@ -1,9 +1,9 @@
-"""Settings access — SDK-first with framework fallback.
+"""Settings access - contract-first with framework fallback.
 
 External verticals should use these helpers instead of importing
 directly from victor.config.settings. Resolution order:
 
-1. victor_sdk.verticals.protocols.config (SDK protocol — no framework dependency)
+1. victor_sdk.verticals.protocols.config (contract protocol - no framework dependency)
 2. victor.config.settings (framework — deferred import)
 3. _MinimalPaths fallback (standalone — no victor-ai at all)
 """
@@ -21,10 +21,10 @@ VICTOR_CONTEXT_FILE: str = "init.md"
 
 
 def get_project_paths(project_root: Optional[str] = None) -> Any:
-    """Get project paths via SDK protocol, framework, or minimal fallback."""
+    """Get project paths via contract protocol, framework, or minimal fallback."""
     root = project_root or str(Path.cwd())
 
-    # 1. SDK protocol (preferred — no framework coupling)
+    # 1. Contract protocol (preferred - no framework coupling)
     try:
         from victor_sdk.verticals.protocols.config import ProjectPathsData
 

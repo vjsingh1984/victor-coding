@@ -65,6 +65,18 @@ def test_pyproject_registers_contract_extension_entry_points() -> None:
     }
 
 
+def test_public_docs_use_contract_first_wording() -> None:
+    files = [
+        "victor_coding/__init__.py",
+        "victor_coding/compat/settings.py",
+    ]
+
+    for file_name in files:
+        source = (_REPO_ROOT / file_name).read_text(encoding="utf-8")
+        assert "SDK-first" not in source
+        assert "SDK-only" not in source
+
+
 def test_pyproject_keeps_sdk_in_base_dependencies_and_victor_runtime_optional() -> None:
     project = tomllib.loads((_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
 

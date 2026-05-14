@@ -1,4 +1,4 @@
-"""Coding vertical package with lazy exports for SDK-first installs.
+"""Coding vertical package with lazy exports for contract-first installs.
 
 Victor's primary vertical for software development, providing:
 - Code exploration and understanding
@@ -13,7 +13,7 @@ coding assistant functionality.
 
 Package Structure:
     assistant.py              - CodingAssistant vertical class
-    plugin.py                 - CodingPlugin class (new SDK-first approach)
+    plugin.py                 - CodingPlugin class (contract-first approach)
     middleware.py             - Code correction middleware
     safety.py                  - Coding-specific safety patterns (legacy)
     safety_enhanced.py        - Enhanced safety with SafetyCoordinator
