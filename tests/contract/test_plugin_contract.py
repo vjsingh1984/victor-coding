@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 import tomllib
 
-from victor_sdk import VictorPlugin, VerticalBase
+from victor_contracts import VictorPlugin, VerticalBase
 
 from victor_coding.assistant import CodingAssistant
 from victor_coding.plugin import CodingPlugin, plugin
@@ -43,6 +43,26 @@ def test_pyproject_registers_canonical_runtime_extension_entry_points() -> None:
     assert entry_points["victor.team_spec_providers"]["coding"] == (
         "victor_coding.teams:CodingTeamSpecProvider"
     )
+
+
+def test_pyproject_registers_contract_extension_entry_points() -> None:
+    entry_points = _entry_points()
+
+    assert "victor.sdk.protocols" not in entry_points
+    assert "victor.sdk.capabilities" not in entry_points
+    assert entry_points["victor.extension.protocols"] == {
+        "coding-tools": "victor_coding.protocols:CodingToolProvider",
+        "coding-safety": "victor_coding.protocols:CodingSafetyProvider",
+        "coding-prompts": "victor_coding.protocols:CodingPromptProvider",
+        "coding-workflows": "victor_coding.protocols:CodingWorkflowProvider",
+    }
+    assert entry_points["victor.extension.capabilities"] == {
+        "coding-lsp": "victor_coding.protocols:LSPCapabilityProvider",
+        "coding-git": "victor_coding.protocols:GitCapabilityProvider",
+        "coding-style": "victor_coding.protocols:CodeStyleCapabilityProvider",
+        "coding-test": "victor_coding.protocols:TestingCapabilityProvider",
+        "coding-refactor": "victor_coding.protocols:RefactoringCapabilityProvider",
+    }
 
 
 def test_pyproject_keeps_sdk_in_base_dependencies_and_victor_runtime_optional() -> None:

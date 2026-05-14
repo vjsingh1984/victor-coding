@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from victor_sdk import (
+from victor_contracts import (
     FileOperationsCapability,
     PromptContributionCapability,
     StageDefinition,
@@ -38,7 +38,7 @@ from victor_sdk import (
     VerticalBase,
     VerticalConfig,
 )
-from victor_sdk.verticals import (
+from victor_contracts.verticals import (
     MiddlewareProtocol,
     ServiceProviderProtocol,
     register_vertical,
@@ -449,22 +449,20 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
             # Tree-sitter parser (lazy — imports tree_sitter_manager on first access)
             def _load_ts():
                 import importlib
+
                 mod = importlib.import_module("victor_coding.codebase.tree_sitter_manager")
                 return mod
 
-            registrations.append(
-                (TreeSitterParserProtocol, create_lazy_capability_proxy(_load_ts))
-            )
+            registrations.append((TreeSitterParserProtocol, create_lazy_capability_proxy(_load_ts)))
 
             # Editor (lazy)
             def _load_editor():
                 import importlib
-                mod = importlib.import_module("victor_coding.editing.editor")
-                return getattr(mod, "FileEditor")()
 
-            registrations.append(
-                (EditorProtocol, create_lazy_capability_proxy(_load_editor))
-            )
+                mod = importlib.import_module("victor_coding.editing.editor")
+                return mod.FileEditor()
+
+            registrations.append((EditorProtocol, create_lazy_capability_proxy(_load_editor)))
 
             # Codebase index factory (lazy)
             def _load_index_factory():
@@ -475,7 +473,7 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
                 registrations.append((CodebaseIndexFactoryProtocol, factory))
 
         except ImportError:
-            pass  # Framework protocols not available (SDK-only mode)
+            pass  # Framework protocols not available (contract-only mode)
 
         return registrations
 

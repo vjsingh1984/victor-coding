@@ -42,7 +42,7 @@ dependencies = [
 
 [project.optional-dependencies]
 runtime = [
-    "victor-ai>=0.6.0,<1.0",  # Runtime support - optional, SDK-first architecture
+    "victor-ai>=0.6.0,<1.0",  # Runtime support - optional, contract-first architecture
 ]
 native = [
     # Native extensions are handled by maturin
@@ -99,15 +99,15 @@ coding-performance = "victor_coding.performance.service_provider:PerformanceServ
 [project.entry-points."victor.team_spec_providers"]
 coding = "victor_coding.teams:CodingTeamSpecProvider"
 
-# NEW: Victor SDK Protocol implementations
-[project.entry-points."victor.sdk.protocols"]
+# Victor extension protocol implementations
+[project.entry-points."victor.extension.protocols"]
 coding-tools = "victor_coding.protocols:CodingToolProvider"
 coding-safety = "victor_coding.protocols:CodingSafetyProvider"
 coding-prompts = "victor_coding.protocols:CodingPromptProvider"
 coding-workflows = "victor_coding.protocols:CodingWorkflowProvider"
 
-# NEW: Victor SDK Capability providers
-[project.entry-points."victor.sdk.capabilities"]
+# Victor extension capability providers
+[project.entry-points."victor.extension.capabilities"]
 coding-lsp = "victor_coding.protocols:LSPCapabilityProvider"
 coding-git = "victor_coding.protocols:GitCapabilityProvider"
 coding-style = "victor_coding.protocols:CodeStyleCapabilityProvider"
