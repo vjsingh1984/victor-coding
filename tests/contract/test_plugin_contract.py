@@ -3,7 +3,7 @@ from unittest.mock import Mock
 
 import tomllib
 
-from victor_sdk import VictorPlugin, VerticalBase
+from victor_contracts import VictorPlugin, VerticalBase
 
 from victor_coding.assistant import CodingAssistant
 from victor_coding.plugin import CodingPlugin, plugin
@@ -48,7 +48,7 @@ def test_pyproject_registers_canonical_runtime_extension_entry_points() -> None:
 def test_pyproject_keeps_sdk_in_base_dependencies_and_victor_runtime_optional() -> None:
     project = tomllib.loads((_REPO_ROOT / "pyproject.toml").read_text(encoding="utf-8"))["project"]
 
-    assert any(dependency.startswith("victor-sdk") for dependency in project["dependencies"])
+    assert any(dependency.startswith("victor-contracts") for dependency in project["dependencies"])
     assert all("victor-ai" not in dependency for dependency in project["dependencies"])
     assert any(
         dependency.startswith("victor-ai>=")

@@ -30,7 +30,7 @@ from __future__ import annotations
 
 from typing import Any, Dict, List, Optional
 
-from victor_sdk import (
+from victor_contracts import (
     FileOperationsCapability,
     PromptContributionCapability,
     StageDefinition,
@@ -38,7 +38,7 @@ from victor_sdk import (
     VerticalBase,
     VerticalConfig,
 )
-from victor_sdk.verticals import (
+from victor_contracts.verticals import (
     MiddlewareProtocol,
     ServiceProviderProtocol,
     register_vertical,
@@ -438,7 +438,7 @@ You have access to 45+ tools. Use them efficiently to accomplish tasks."""
         """
         registrations = []
         try:
-            from victor_sdk.capability_runtime import (
+            from victor_contracts.capability_runtime import (
                 CodebaseIndexFactoryProtocol,
                 EditorProtocol,
                 TreeSitterParserProtocol,

@@ -15,7 +15,7 @@
 """Victor SDK Protocol implementations for victor-coding.
 
 This module provides protocol implementations that can be discovered via
-the victor-sdk entry point system, enabling the coding vertical to
+the victor-contracts entry point system, enabling the coding vertical to
 register capabilities with the framework without direct dependencies.
 
 Entry Points:
@@ -35,9 +35,9 @@ from __future__ import annotations
 import logging
 from typing import TYPE_CHECKING, Any, Dict, List, Optional
 
-# Import victor-sdk protocols (NO runtime dependency on victor-ai!)
+# Import victor-contracts protocols (NO runtime dependency on victor-ai!)
 try:
-    from victor_sdk.verticals.protocols import (
+    from victor_contracts.verticals.protocols import (
         PromptProvider,
         SafetyProvider,
         ToolProvider,
@@ -497,7 +497,7 @@ class RefactoringCapabilityProvider:
 
 # Import new SDK protocols (optional, for forward compatibility)
 try:
-    from victor_sdk.verticals.protocols import (
+    from victor_contracts.verticals.protocols import (
         SandboxProvider as SandboxProviderProtocol,
         HookProvider as HookProviderProtocol,
         PermissionProvider as PermissionProviderProtocol,
