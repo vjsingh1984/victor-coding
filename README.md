@@ -1,3 +1,8 @@
+> [!IMPORTANT]
+> **This repository has moved into the Victor monorepo.**
+> `victor-coding` is now developed at [vjsingh1984/victor](https://github.com/vjsingh1984/victor) under `verticals/victor-coding/`.
+> This repo is archived (read-only); open issues and PRs against the monorepo.
+
 # victor-coding
 
 **Coding vertical for Victor AI - Software development, debugging, and code generation**
